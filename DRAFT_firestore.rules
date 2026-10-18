@@ -1,0 +1,116 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Pillar 0: Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidConfigBackup(data) {
+      return data.userId is string &&
+             data.userId.size() >= 1 &&
+             data.userId.size() <= 128 &&
+             data.userId == request.auth.uid &&
+             data.title is string &&
+             data.title.size() >= 1 &&
+             data.title.size() <= 120 &&
+             data.description is string &&
+             data.description.size() <= 500 &&
+             data.configJson is string &&
+             data.configJson.size() >= 2 &&
+             data.configJson.size() <= 200000 &&
+             data.accentPreset is string &&
+             data.accentPreset.size() >= 1 &&
+             data.accentPreset.size() <= 60 &&
+             data.moduleCount is int &&
+             data.moduleCount >= 0 &&
+             data.moduleCount <= 100 &&
+             data.addonCount is int &&
+             data.addonCount >= 0 &&
+             data.addonCount <= 200 &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt is timestamp &&
+             data.updatedAt <= request.time;
+    }
+
+    match /users/{userId}/configBackups/{backupId} {
+      allow get: if isSignedIn() &&
+                    isValidId(userId) &&
+                    isValidId(backupId) &&
+                    request.auth.uid == userId &&
+                    existing().userId == request.auth.uid;
+
+      allow list: if isSignedIn() &&
+                     request.auth.uid == userId &&
+                     existing().userId == request.auth.uid;
+
+      allow create: if isSignedIn() &&
+                       isValidId(userId) &&
+                       isValidId(backupId) &&
+                       request.auth.uid == userId &&
+                       incoming().keys().hasAll([
+                         'userId',
+                         'title',
+                         'description',
+                         'configJson',
+                         'accentPreset',
+                         'moduleCount',
+                         'addonCount',
+                         'createdAt',
+                         'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId',
+                         'title',
+                         'description',
+                         'configJson',
+                         'accentPreset',
+                         'moduleCount',
+                         'addonCount',
+                         'createdAt',
+                         'updatedAt'
+                       ]) &&
+                       isValidConfigBackup(incoming());
+
+      allow update: if isSignedIn() &&
+                       isValidConfigBackup(incoming()) &&
+                       isValidId(userId) &&
+                       isValidId(backupId) &&
+                       request.auth.uid == userId &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'title',
+                         'description',
+                         'configJson',
+                         'accentPreset',
+                         'moduleCount',
+                         'addonCount',
+                         'updatedAt'
+                       ]);
+
+      allow delete: if isSignedIn() &&
+                       isValidId(userId) &&
+                       isValidId(backupId) &&
+                       request.auth.uid == userId &&
+                       existing().userId == request.auth.uid;
+    }
+  }
+}

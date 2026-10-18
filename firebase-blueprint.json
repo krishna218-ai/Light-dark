@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "ConfigBackup": {
+      "title": "ConfigBackup",
+      "description": "Cloud-synced Flarial Client module configuration, HUD coordinates, crosshair, and pack preset backup owned by an authenticated user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The UID of the authenticated Google user who owns this backup."
+        },
+        "title": {
+          "type": "string",
+          "description": "Human-readable name for the cloud backup snapshot."
+        },
+        "description": {
+          "type": "string",
+          "description": "Summary of active modules, profile, and settings stored in this backup."
+        },
+        "configJson": {
+          "type": "string",
+          "description": "Serialized Flarial Client module, HUD, crosshair, script, and profile configuration payload."
+        },
+        "accentPreset": {
+          "type": "string",
+          "description": "Active neon theme preset identifier."
+        },
+        "moduleCount": {
+          "type": "integer",
+          "description": "Count of enabled utility modules in this backup snapshot."
+        },
+        "addonCount": {
+          "type": "integer",
+          "description": "Count of enabled Bedrock add-ons/resource packs in this backup snapshot."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the backup was created. Clients must submit FieldValue.serverTimestamp()."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the backup was last updated. Clients must submit FieldValue.serverTimestamp()."
+        }
+      },
+      "required": [
+        "userId",
+        "title",
+        "description",
+        "configJson",
+        "accentPreset",
+        "moduleCount",
+        "addonCount",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/configBackups/{backupId}": {
+      "schema": {
+        "$ref": "#/entities/ConfigBackup"
+      },
+      "description": "Per-user cloud backups of Flarial Client module configurations and HUD layouts."
+    }
+  }
+}

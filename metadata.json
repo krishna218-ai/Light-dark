@@ -1,0 +1,6 @@
+{
+  "name": "Flarial Client",
+  "description": "Custom Minecraft Bedrock Edition utility launcher, HUD overlay & ClickGUI configurator, add-on manager, and JSON profile studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

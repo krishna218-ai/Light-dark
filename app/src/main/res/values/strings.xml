@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Flarial Client</string>
+    <string name="dashboard_tab">Dashboard</string>
+    <string name="modules_tab">Modules</string>
+    <string name="hud_editor_tab">HUD &amp; Crosshair</string>
+    <string name="addons_tab">Add-Ons</string>
+    <string name="profiles_tab">Profiles</string>
+    <string name="launch_minecraft">Launch Minecraft</string>
+    <string name="launch_with_overlay">Launch + Start Overlay</string>
+    <string name="minecraft_detected">Minecraft Bedrock Installed</string>
+    <string name="minecraft_not_found">Minecraft Package Not Detected</string>
+    <string name="overlay_permission_granted">Floating Overlay Ready</string>
+    <string name="overlay_permission_missing">Overlay Permission Needed</string>
+    <string name="grant_overlay_permission">Grant Overlay Permission</string>
+    <string name="toggle_floating_overlay">Toggle Floating ClickGUI</string>
+    <string name="import_addon">Import .mcaddon / .mcpack</string>
+    <string name="link_mojang_folder">Link com.mojang Directory</string>
+    <string name="export_profile_json">Export Profile JSON</string>
+    <string name="import_profile_json">Restore Profile JSON</string>
+</resources>
